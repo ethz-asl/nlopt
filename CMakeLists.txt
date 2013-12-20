@@ -18,7 +18,7 @@ catkin_package(
 
 ExternalProject_Add(nlopt_src
   DOWNLOAD_COMMAND wget http://ab-initio.mit.edu/nlopt/nlopt-${VERSION}.tar.gz
-  PATCH_COMMAND tar -xzf ../nlopt-${VERSION}.tar.gz && mv nlopt-${VERSION} ../nlopt_src-build/
+  PATCH_COMMAND tar -xzf ../nlopt-${VERSION}.tar.gz && mv -f nlopt-${VERSION} ../nlopt_src-build/
   CONFIGURE_COMMAND nlopt-${VERSION}/configure --with-cxx --without-matlab --prefix=${CATKIN_DEVEL_PREFIX}
   BUILD_COMMAND make
   INSTALL_COMMAND make install
