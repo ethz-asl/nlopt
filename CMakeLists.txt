@@ -16,26 +16,26 @@ catkin_package(
     LIBRARIES nlopt_wrap
 )
 
+set(NLOPT_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/nlopt_install)
+set(NLOPT_INSTALL_DIR ${NLOPT_INSTALL_PREFIX}/${CMAKE_INSTALL_PREFIX})
+configure_file(make_install_nlopt.sh.in ${CMAKE_BINARY_DIR}/make_install_nlopt.sh)
+
 ExternalProject_Add(nlopt_src
   DOWNLOAD_COMMAND wget http://ab-initio.mit.edu/nlopt/nlopt-${VERSION}.tar.gz
   PATCH_COMMAND tar -xzf ../nlopt-${VERSION}.tar.gz && rm -rf ../nlopt_src-build/nlopt-${VERSION} && mv nlopt-${VERSION} ../nlopt_src-build/
-  CONFIGURE_COMMAND nlopt-${VERSION}/configure --with-cxx --without-matlab --with-pic --prefix=${CATKIN_DEVEL_PREFIX}
+  CONFIGURE_COMMAND nlopt-${VERSION}/configure --with-cxx --without-matlab --with-pic --prefix=${CMAKE_INSTALL_PREFIX}
   BUILD_COMMAND make
-  INSTALL_COMMAND make install
+  INSTALL_COMMAND ${CMAKE_BINARY_DIR}/make_install_nlopt.sh
 )
 
 add_library(nlopt_wrap src/wrap_lib.cc)
 target_link_libraries(nlopt_wrap -Wl,--whole-archive
-  ${CATKIN_DEVEL_PREFIX}/lib/libnlopt_cxx.a -Wl,--no-whole-archive)
+  ${NLOPT_INSTALL_DIR}/lib/libnlopt_cxx.a -Wl,--no-whole-archive)
 add_dependencies(nlopt_wrap nlopt_src)
 
-install(DIRECTORY include
-  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
-)
-install(DIRECTORY lib
-  DESTINATION ${CATKIN_GLOBAL_LIB_DESTINATION}
-)
-install(DIRECTORY share
-  DESTINATION ${CATKIN_GLOBAL_SHARE_DESTINATION}
-)
+install(TARGETS nlopt_wrap
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
 
+install(DIRECTORY ${NLOPT_INSTALL_DIR}/
+  DESTINATION ${CMAKE_INSTALL_PREFIX}
+)
