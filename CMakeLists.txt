@@ -25,7 +25,8 @@ ExternalProject_Add(nlopt_src
 )
 
 add_library(nlopt_wrap src/wrap_lib.cc)
-target_link_libraries(nlopt_wrap ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_LIB_DESTINATION}/libnlopt_cxx.a)
+target_link_libraries(nlopt_wrap -Wl,--whole-archive
+  ${CATKIN_DEVEL_PREFIX}/lib/libnlopt_cxx.a -Wl,--no-whole-archive)
 add_dependencies(nlopt_wrap nlopt_src)
 
 install(DIRECTORY include
