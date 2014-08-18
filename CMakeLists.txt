@@ -29,8 +29,11 @@ ExternalProject_Add(nlopt_src
 )
 
 add_library(nlopt_wrap src/wrap_lib.cc)
-target_link_libraries(nlopt_wrap -Wl,--whole-archive
-  ${NLOPT_INSTALL_DIR}/lib/libnlopt_cxx.a -Wl,--no-whole-archive)
+if(APPLE)
+  target_link_libraries(nlopt_wrap -Wl,-all_load ${NLOPT_INSTALL_DIR}/lib/libnlopt_cxx.a -Wl,-noall_load)
+else()
+  target_link_libraries(nlopt_wrap -Wl,--whole-archive ${NLOPT_INSTALL_DIR}/lib/libnlopt_cxx.a -Wl,--no-whole-archive)
+endif()
 add_dependencies(nlopt_wrap nlopt_src)
 
 install(TARGETS nlopt_wrap
