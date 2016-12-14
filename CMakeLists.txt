@@ -9,10 +9,11 @@ include(ExternalProject)
 
 set(VERSION 2.4.2)
 
+file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/include)
 catkin_package(
     DEPENDS
     CATKIN_DEPENDS
-    INCLUDE_DIRS include
+    INCLUDE_DIRS ${CATKIN_DEVEL_PREFIX}/include
     LIBRARIES nlopt_wrap
 )
 
