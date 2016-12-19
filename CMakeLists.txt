@@ -22,7 +22,8 @@ set(NLOPT_INSTALL_DIR ${NLOPT_INSTALL_PREFIX}/${CMAKE_INSTALL_PREFIX})
 configure_file(make_install_nlopt.sh.in ${CMAKE_BINARY_DIR}/make_install_nlopt.sh)
 
 ExternalProject_Add(nlopt_src
-  DOWNLOAD_COMMAND wget https://github.com/ethz-asl/thirdparty_library_binaries/raw/master/nlopt-${VERSION}.tar.gz
+  DOWNLOAD_COMMAND wget --retry-connrefused --waitretry=1 --timeout=12 --tries 10 https://github.com/ethz-asl/thirdparty_library_binaries/raw/master/nlopt-${VERSION}.tar.gz
+  UPDATE_COMMAND ""
   PATCH_COMMAND tar -xzf ../nlopt-${VERSION}.tar.gz && rm -rf ../nlopt_src-build/nlopt-${VERSION} && mv nlopt-${VERSION} ../nlopt_src-build/
   CONFIGURE_COMMAND nlopt-${VERSION}/configure --with-cxx --without-matlab --with-pic --prefix=${CMAKE_INSTALL_PREFIX}
   BUILD_COMMAND make
